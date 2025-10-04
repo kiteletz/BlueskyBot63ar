@@ -5,6 +5,7 @@ import os
 import re
 import logging
 import sys
+from datetime import datetime  # 追加: 標準ライブラリのdatetime
 from atproto import Client, models
 
 # ログ設定（ファイルとターミナル両方に出力）
@@ -13,7 +14,7 @@ logging.basicConfig(
     format='%(asctime)s - %(message)s',
     handlers=[
         logging.FileHandler('bot.log'),
-        logging.StreamHandler(sys.stdout)  # ターミナル出力追加
+        logging.StreamHandler(sys.stdout)
     ]
 )
 
@@ -28,14 +29,14 @@ def load_posts():
         df = pd.read_excel(EXCEL_FILE)
         posts = []
         for _, row in df.iterrows():
-            hashtags = [tag.strip() for tag in str(row['hashtags']).split(',') if pd.notna(row['hashtags']) and tag.strip()]  # 空タグ除外
+            hashtags = [tag.strip() for tag in str(row['hashtags']).split(',') if pd.notna(row['hashtags']) and tag.strip()]
             post = {
                 'text': str(row['text']),
                 'hashtags': hashtags,
                 'image_path': str(row['image_path'])
             }
             posts.append(post)
-        random.shuffle(posts)  # ランダム順
+        random.shuffle(posts)
         return posts
     except Exception as e:
         logging.error(f"Error loading Excel: {e}")
@@ -67,14 +68,14 @@ def create_facets(text, hashtags):
     return facets
 
 def post_to_bluesky(client, text, hashtags, image_path):
-    """画像付き投稿（ハッシュタグをファセットでリンク化）"""
+    """画像付きまたはテキストのみ投稿（ハッシュタグをファセットでリンク化）"""
     try:
         full_text = text + ' ' + ' '.join([f"#{tag}" for tag in hashtags])
         facets = create_facets(full_text, hashtags)
         logging.info(f"Facets generated: {facets}")
         
-        # 変更点: 画像の有無に関わらず投稿。画像ありならsend_image、なしならsend_post
-        if os.path.exists(image_path):
+        # 画像の有無をチェック
+        if os.path.exists(image_path) and image_path.strip():
             with open(image_path, 'rb') as f:
                 img_data = f.read()
             client.send_image(
@@ -91,10 +92,10 @@ def post_to_bluesky(client, text, hashtags, image_path):
                 "record": {
                     "text": full_text,
                     "facets": facets,
-                    "createdAt": models.datetime.datetime.now().isoformat()
+                    "createdAt": datetime.now().isoformat()  # 修正: models.datetime → datetime
                 }
             })
-            logging.info(f"Posted without image: {full_text[:50]}... (image_path: {image_path} not found, but posted anyway)")
+            logging.info(f"Posted without image: {full_text[:50]}... (image_path: {image_path or 'empty'} not found, but posted anyway)")
         return True
     except Exception as e:
         logging.error(f"Error posting: {e}")
@@ -127,7 +128,7 @@ def main():
         return
 
     # 1件投稿
-    post = posts.pop(0)  # 最初の投稿を消費（ランダム済み）
+    post = posts.pop(0)
     if post_to_bluesky(client, post['text'], post['hashtags'], post['image_path']):
         update_excel(post['text'])
         logging.info("Post successful")
