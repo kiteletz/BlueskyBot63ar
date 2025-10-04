@@ -1,0 +1,42 @@
+2025-10-04 17:23:12,210 - HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2025-10-04 17:23:12,707 - HTTP Request: GET https://chalciporus.us-west.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=kiteletz63ar.bsky.social "HTTP/1.1 200 OK"
+2025-10-04 17:23:12,708 - Authenticated successfully
+2025-10-04 17:23:12,801 - Full text: text2😺 #cat #cute #cat #cute
+2025-10-04 17:23:12,801 - Facet for #cat: byte_start=10, byte_end=14
+2025-10-04 17:23:12,801 - Facet for #cat: byte_start=21, byte_end=25
+2025-10-04 17:23:12,801 - Facet for #cute: byte_start=15, byte_end=20
+2025-10-04 17:23:12,801 - Facet for #cute: byte_start=26, byte_end=31
+2025-10-04 17:23:12,801 - Facets generated: [Main(features=[Tag(tag='cat', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=14, byte_start=10, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='cat', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=25, byte_start=21, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='cute', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=20, byte_start=15, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='cute', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=31, byte_start=26, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet')]
+2025-10-04 17:23:13,228 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2025-10-04 17:23:13,943 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2025-10-04 17:23:13,944 - Posted: text2😺 #cat #cute... with images/image2.png
+2025-10-04 17:23:13,974 - Excel updated, removed: text2😺...
+2025-10-04 17:23:13,974 - Post successful
+2025-10-04 17:24:04,825 - HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2025-10-04 17:24:05,322 - HTTP Request: GET https://chalciporus.us-west.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=kiteletz63ar.bsky.social "HTTP/1.1 200 OK"
+2025-10-04 17:24:05,324 - Authenticated successfully
+2025-10-04 17:24:05,400 - Full text: مرحبا test #ocean #relax #ocean #relax
+2025-10-04 17:24:05,400 - Facet for #ocean: byte_start=16, byte_end=22
+2025-10-04 17:24:05,400 - Facet for #ocean: byte_start=30, byte_end=36
+2025-10-04 17:24:05,401 - Facet for #relax: byte_start=23, byte_end=29
+2025-10-04 17:24:05,401 - Facet for #relax: byte_start=37, byte_end=43
+2025-10-04 17:24:05,401 - Facets generated: [Main(features=[Tag(tag='ocean', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=22, byte_start=16, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='ocean', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=36, byte_start=30, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='relax', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=29, byte_start=23, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='relax', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=43, byte_start=37, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet')]
+2025-10-04 17:24:05,759 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2025-10-04 17:24:06,279 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2025-10-04 17:24:06,280 - Posted: مرحبا test #ocean #relax... with images/image3.png
+2025-10-04 17:24:06,303 - Excel updated, removed: مرحبا test...
+2025-10-04 17:24:06,303 - Post successful
+2025-10-04 17:28:00,346 - HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2025-10-04 17:28:00,913 - HTTP Request: GET https://chalciporus.us-west.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=kiteletz63ar.bsky.social "HTTP/1.1 200 OK"
+2025-10-04 17:28:00,914 - Authenticated successfully
+2025-10-04 17:28:01,011 - Full text: text1🌅 #nature #photo #nature #photo
+2025-10-04 17:28:01,012 - Facet for #nature: byte_start=10, byte_end=17
+2025-10-04 17:28:01,012 - Facet for #nature: byte_start=25, byte_end=32
+2025-10-04 17:28:01,012 - Facet for #photo: byte_start=18, byte_end=24
+2025-10-04 17:28:01,012 - Facet for #photo: byte_start=33, byte_end=39
+2025-10-04 17:28:01,012 - Facets generated: [Main(features=[Tag(tag='nature', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=17, byte_start=10, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='nature', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=32, byte_start=25, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='photo', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=24, byte_start=18, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet'), Main(features=[Tag(tag='photo', py_type='app.bsky.richtext.facet#tag')], index=ByteSlice(byte_end=39, byte_start=33, py_type='app.bsky.richtext.facet#byteSlice'), py_type='app.bsky.richtext.facet')]
+2025-10-04 17:28:01,362 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2025-10-04 17:28:02,293 - HTTP Request: POST https://chalciporus.us-west.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2025-10-04 17:28:02,294 - Posted: text1🌅 #nature #photo... with images/image1.png
+2025-10-04 17:28:02,320 - Excel updated, removed: text1🌅...
+2025-10-04 17:28:02,320 - Post successful
