@@ -28,7 +28,7 @@ def load_posts():
         df = pd.read_excel(EXCEL_FILE)
         posts = []
         for _, row in df.iterrows():
-            hashtags = [tag.strip() for tag in str(row['hashtags']).split(',') if pd.notna(row['hashtags'])]
+            hashtags = [tag.strip() for tag in str(row['hashtags']).split(',') if pd.notna(row['hashtags']) and tag.strip()]  # 空タグ除外
             post = {
                 'text': str(row['text']),
                 'hashtags': hashtags,
@@ -69,21 +69,32 @@ def create_facets(text, hashtags):
 def post_to_bluesky(client, text, hashtags, image_path):
     """画像付き投稿（ハッシュタグをファセットでリンク化）"""
     try:
-        if not os.path.exists(image_path):
-            logging.error(f"Image not found: {image_path}, skipping post")
-            return False
-        with open(image_path, 'rb') as f:
-            img_data = f.read()
         full_text = text + ' ' + ' '.join([f"#{tag}" for tag in hashtags])
         facets = create_facets(full_text, hashtags)
         logging.info(f"Facets generated: {facets}")
-        client.send_image(
-            text=full_text,
-            image=img_data,
-            image_alt='',
-            facets=facets
-        )
-        logging.info(f"Posted: {full_text[:50]}... with {image_path}")
+        
+        # 変更点: 画像の有無に関わらず投稿。画像ありならsend_image、なしならsend_post
+        if os.path.exists(image_path):
+            with open(image_path, 'rb') as f:
+                img_data = f.read()
+            client.send_image(
+                text=full_text,
+                image=img_data,
+                image_alt='',
+                facets=facets
+            )
+            logging.info(f"Posted with image: {full_text[:50]}... with {image_path}")
+        else:
+            client.com.atproto.repo.create_record({
+                "repo": client.me.did,
+                "collection": "app.bsky.feed.post",
+                "record": {
+                    "text": full_text,
+                    "facets": facets,
+                    "createdAt": models.datetime.datetime.now().isoformat()
+                }
+            })
+            logging.info(f"Posted without image: {full_text[:50]}... (image_path: {image_path} not found, but posted anyway)")
         return True
     except Exception as e:
         logging.error(f"Error posting: {e}")
