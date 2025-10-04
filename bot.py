@@ -5,7 +5,7 @@ import os
 import re
 import logging
 import sys
-from datetime import datetime  # 追加: 標準ライブラリのdatetime
+from datetime import datetime, timezone  # 修正: timezoneを追加
 from atproto import Client, models
 
 # ログ設定（ファイルとターミナル両方に出力）
@@ -92,7 +92,7 @@ def post_to_bluesky(client, text, hashtags, image_path):
                 "record": {
                     "text": full_text,
                     "facets": facets,
-                    "createdAt": datetime.now().isoformat()  # 修正: models.datetime → datetime
+                    "createdAt": datetime.now(timezone.utc).isoformat()  # 修正: UTCでRFC-3339
                 }
             })
             logging.info(f"Posted without image: {full_text[:50]}... (image_path: {image_path or 'empty'} not found, but posted anyway)")
