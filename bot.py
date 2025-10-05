@@ -5,10 +5,10 @@ import os
 import re
 import logging
 import sys
-from datetime import datetime, timezone  # 修正: timezoneを追加
+from datetime import datetime, timezone
 from atproto import Client, models
 
-# ログ設定（ファイルとターミナル両方に出力）
+# ログ設定
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(message)s',
@@ -18,7 +18,7 @@ logging.basicConfig(
     ]
 )
 
-# 環境変数から認証情報を取得
+# 環境変数
 HANDLE = os.environ.get('BLUESKY_HANDLE')
 PAT = os.environ.get('BLUESKY_PAT')
 EXCEL_FILE = 'posts.xlsx'
@@ -30,10 +30,11 @@ def load_posts():
         posts = []
         for _, row in df.iterrows():
             hashtags = [tag.strip() for tag in str(row['hashtags']).split(',') if pd.notna(row['hashtags']) and tag.strip()]
+            image_path = str(row['image_path']) if pd.notna(row['image_path']) else ''
             post = {
                 'text': str(row['text']),
                 'hashtags': hashtags,
-                'image_path': str(row['image_path'])
+                'image_path': image_path
             }
             posts.append(post)
         random.shuffle(posts)
@@ -43,7 +44,7 @@ def load_posts():
         return []
 
 def create_facets(text, hashtags):
-    """ハッシュタグをファセットとして設定（絵文字対応）"""
+    """ハッシュタグをファセットとして設定"""
     facets = []
     full_text = text + ' ' + ' '.join([f"#{tag}" for tag in hashtags])
     logging.info(f"Full text: {full_text}")
@@ -68,34 +69,54 @@ def create_facets(text, hashtags):
     return facets
 
 def post_to_bluesky(client, text, hashtags, image_path):
-    """画像付きまたはテキストのみ投稿（ハッシュタグをファセットでリンク化）"""
+    """画像付き（複数可）またはテキストのみ投稿"""
     try:
         full_text = text + ' ' + ' '.join([f"#{tag}" for tag in hashtags])
         facets = create_facets(full_text, hashtags)
         logging.info(f"Facets generated: {facets}")
         
         # 画像の有無をチェック
-        if os.path.exists(image_path) and image_path.strip():
-            with open(image_path, 'rb') as f:
-                img_data = f.read()
-            client.send_image(
-                text=full_text,
-                image=img_data,
-                image_alt='',
-                facets=facets
-            )
-            logging.info(f"Posted with image: {full_text[:50]}... with {image_path}")
+        if image_path and image_path.strip():
+            image_paths = [p.strip() for p in image_path.split(',') if p.strip()]  # カンマ区切りで分割
+            images = []
+            for path in image_paths[:4]:  # Blueskyは最大4枚
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        img_data = f.read()
+                    images.append((img_data, ''))
+                else:
+                    logging.warning(f"Image not found: {path}, skipping this image")
+            if images:
+                client.send_images(
+                    text=full_text,
+                    images=images,  # (データ, altテキスト)のリスト
+                    facets=facets
+                )
+                logging.info(f"Posted with images: {full_text[:50]}... with {', '.join(image_paths[:4])}")
+            else:
+                # 画像が見つからない場合、テキストのみ投稿
+                client.com.atproto.repo.create_record({
+                    "repo": client.me.did,
+                    "collection": "app.bsky.feed.post",
+                    "record": {
+                        "text": full_text,
+                        "facets": facets,
+                        "createdAt": datetime.now(timezone.utc).isoformat()
+                    }
+                })
+                logging.info(f"Posted without images: {full_text[:50]}... (no valid images found)")
         else:
+            # 画像パスが空の場合
             client.com.atproto.repo.create_record({
                 "repo": client.me.did,
                 "collection": "app.bsky.feed.post",
                 "record": {
                     "text": full_text,
                     "facets": facets,
-                    "createdAt": datetime.now(timezone.utc).isoformat()  # 修正: UTCでRFC-3339
+                    "createdAt": datetime.now(timezone.utc).isoformat()
                 }
             })
-            logging.info(f"Posted without image: {full_text[:50]}... (image_path: {image_path or 'empty'} not found, but posted anyway)")
+            logging.info(f"Posted without images: {full_text[:50]}... (image_path empty)")
         return True
     except Exception as e:
         logging.error(f"Error posting: {e}")
