@@ -44,10 +44,12 @@ def load_posts():
         return []
 
 def create_facets(text, hashtags):
-    """ハッシュタグをファセットとして設定"""
+    """ハッシュタグとURLをファセットとして設定"""
     facets = []
     full_text = text + ' ' + ' '.join([f"#{tag}" for tag in hashtags])
     logging.info(f"Full text: {full_text}")
+
+    # 1. ハッシュタグのファセット
     for tag in hashtags:
         tag_with_hash = f"#{tag}"
         matches = list(re.finditer(re.escape(tag_with_hash), full_text))
@@ -66,6 +68,27 @@ def create_facets(text, hashtags):
             )
             facets.append(facet)
             logging.info(f"Facet for {tag_with_hash}: byte_start={byte_start}, byte_end={byte_end}")
+
+    # 2. URLのファセット
+    url_pattern = r'https?://[^\s]+'
+    matches = list(re.finditer(url_pattern, full_text))
+    for match in matches:
+        url = match.group(0)
+        start, end = match.span()
+        byte_start = len(full_text[:start].encode('utf-8'))
+        byte_end = len(full_text[:end].encode('utf-8'))
+        facet = models.AppBskyRichtextFacet.Main(
+            features=[
+                models.AppBskyRichtextFacet.Link(uri=url)
+            ],
+            index=models.AppBskyRichtextFacet.ByteSlice(
+                byte_start=byte_start,
+                byte_end=byte_end
+            )
+        )
+        facets.append(facet)
+        logging.info(f"Facet for URL {url}: byte_start={byte_start}, byte_end={byte_end}")
+
     return facets
 
 def post_to_bluesky(client, text, hashtags, image_path):
