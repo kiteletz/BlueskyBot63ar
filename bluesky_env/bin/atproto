@@ -1,0 +1,7 @@
+#!/Users/yas/bluesky-bot/bluesky_env/bin/python3.12
+import sys
+from atproto_cli import atproto_cli
+if __name__ == '__main__':
+    if sys.argv[0].endswith('.exe'):
+        sys.argv[0] = sys.argv[0][:-4]
+    sys.exit(atproto_cli())
