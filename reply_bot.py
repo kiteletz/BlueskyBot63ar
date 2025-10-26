@@ -81,8 +81,8 @@ def main():
             logging.error("No reply texts available. Exiting.")
             return
 
-        cutoff_time = datetime.now(timezone.utc) - timedelta(days=1)
-        feed = client.get_author_feed(actor=HANDLE, limit=10) #テスト用
+        cutoff_time = datetime.now(timezone.utc) - timedelta(days=10)
+        feed = client.get_author_feed(actor=HANDLE, limit=100) #テスト用
         recent_posts = [
             post for post in feed.feed
             if datetime.fromisoformat(post.post.record.created_at.replace('Z', '+00:00')) >= cutoff_time
