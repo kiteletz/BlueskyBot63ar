@@ -1,12 +1,12 @@
 name: Bluesky Bot - Scheduled Post
 
 permissions:
-  contents: write  # リポジトリへの書き込み権限（git push用）
+  contents: write
 
 on:
   schedule:
-    - cron: '0 1,3,5,7,9,11,13,15,17,19,21,23 * * *'  # JST（UTC+9）
-  workflow_dispatch:  # 手動実行用
+    - cron: '0 1,3,5,7,9,11,13,15,17,19,21,23 * * *'  # 約2時間おき（JST換算で偶数時間帯）
+  workflow_dispatch:
 
 jobs:
   post:
@@ -30,10 +30,4 @@ jobs:
       run: |
         python bot.py
 
-    - name: Commit updated Excel
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add posts.xlsx
-        git diff --staged --quiet || git commit -m "Update posts.xlsx after post"
-        git push
+    # ← 以前あった「Commit updated Excel」ステップは削除
